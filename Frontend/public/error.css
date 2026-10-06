@@ -1,0 +1,127 @@
+/* =========================================================
+   Hoja de estilos compartida por TODAS las páginas de error
+   estáticas (404, 401, 403, 500, 503).
+
+   Mismo criterio visual que la pestaña de errores de GitHub:
+   código enorme como protagonista, una línea, título corto,
+   explicación humana y una acción clara.
+
+   Es HTML + CSS puro a propósito: tiene que verse bien AUNQUE
+   el servidor falle y Vue nunca llegue a arrancar.
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  background-color: #f6f8fa;
+  color: #1f2328;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.pagina-error {
+  width: 100%;
+  max-width: 720px;
+  text-align: center;
+}
+
+.marca {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #656d76;
+  margin-bottom: 40px;
+}
+
+/* El código es el protagonista de la pantalla */
+.codigo {
+  font-size: clamp(88px, 22vw, 200px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: #1f2328;
+}
+
+.linea {
+  width: min(420px, 80vw);
+  height: 1px;
+  background-color: #d8dee4;
+  margin: 40px auto;
+}
+
+.titulo {
+  margin: 0;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  color: #1f2328;
+}
+
+.mensaje {
+  max-width: 540px;
+  margin: 16px auto 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #656d76;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 36px;
+}
+
+.boton,
+.boton-secundario {
+  display: inline-block;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.boton {
+  background-color: #1577ad;
+  color: #ffffff;
+}
+
+.boton:hover {
+  background-color: #0f5c85;
+}
+
+.boton-secundario {
+  background-color: transparent;
+  color: #1f2328;
+  border-color: #d8dee4;
+}
+
+.boton-secundario:hover {
+  background-color: #eef1f4;
+}
+
+.pie {
+  margin-top: 48px;
+  font-size: 0.8rem;
+  color: #8c959f;
+}

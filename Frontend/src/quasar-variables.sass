@@ -1,0 +1,25 @@
+// Variables Sass del tema. Quasar las inyecta en TODOS sus .sass a traves de
+// vite.config.js, y de aqui salen las utilidades que se usan en las plantillas:
+// bg-primary, text-white, color="primary", etc.
+//
+// PALETA: basada en la Plataforma Integra.
+// Los cuatro colores de acento son los que usa Integra para diferenciar roles:
+//   azul #2095D6 (administrativos) · verde #1AA85E (docentes)
+//   amarillo #FDCC40 (estudiantes)  · rojo #DF363C (padres/familias)
+//
+// NOTA DE ACCESIBILIDAD: el azul puro de Integra (#2095D6) con texto blanco
+// alcanza solo 3.3:1 de contraste y no cumple WCAG AA (4.5:1). Por eso
+// $primary usa el mismo tono oscurecido (#1577AD = 4.9:1); el azul original
+// se conserva en style.css como --color-primario-claro para bordes y acentos,
+// donde no hay texto encima. Igual criterio con $positive/$negative, que
+// llevan texto blanco dentro de las insignias "Activo"/"Inactivo".
+$primary   : #1577AD
+$secondary : #1AA85E
+$accent    : #FDCC40
+
+$dark      : #1D2B36
+
+$positive  : #158047
+$negative  : #CF2F34
+$info      : #1577AD
+$warning   : #FDCC40
