@@ -1,0 +1,35 @@
+# Blueprint de Render: un UNICO Web Service que sirve la API y el frontend.
+#
+# Flujo del despliegue:
+#   1. "npm install"          -> instala dependencias de la raiz y, via
+#                                postinstall, las del backend (Backend Prueba).
+#   2. "npm run build"        -> instala el frontend, compila Vue/Quasar
+#                                (Frontend/dist) y lo copia a
+#                                "Backend Prueba/public".
+#   3. "npm start"            -> arranca Express, que sirve /api/* y el
+#                                frontend compilado desde public/ (mismo puerto,
+#                                mismo dominio, sin CORS).
+#
+# Si el servicio ya existe en el dashboard (creado a mano), esta guia sirve de
+# referencia: replicate los mismos comandos y variables en Render -> Settings.
+services:
+  - type: web
+    name: gestion-escolar
+    runtime: node
+    plan: free
+    # Root Directory vacio = raiz del repositorio.
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    # Ruta de salud del backend (server.js): Render la monitorea para saber
+    # si el servicio esta arriba.
+    healthCheckPath: /life
+    envVars:
+      # Version de Node 22: Vite 8 exige Node 20.19+ o 22.12+.
+      - key: NODE_VERSION
+        value: "22"
+      # sync: false = el valor se escribe en el dashboard (no va al repo).
+      # Son las MISMAS variables que ya estan en el entorno del servicio.
+      - key: MONGO_URL
+        sync: false
+      - key: SECRETORPRIVATEKEY
+        sync: false

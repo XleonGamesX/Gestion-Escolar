@@ -20,6 +20,7 @@ Aplicación de gestión escolar: **Frontend Vue 3 + Quasar** y **Backend Express
 │   │   ├── stores/        # Pinia (+ persistencia)
 │   │   ├── services/      # Instancia única de axios (api.js)
 │   │   └── helpers/       # alertas.js, errorHandler.js, ...
+│   ├── .env               # Local: VITE_API_URL=http://localhost:4500/api
 │   └── .env.example
 │
 ├── Backend Prueba/        # API Express + Mongoose
@@ -28,9 +29,8 @@ Aplicación de gestión escolar: **Frontend Vue 3 + Quasar** y **Backend Express
 │   ├── scripts/seed.js    # Crea el usuario administrador de prueba
 │   └── .env.example
 │
-├── api/index.js           # Entrada de la API para Vercel (serverless)
-├── vercel.json            # Build del frontend + rewrites de /api/*
-└── package.json           # Dependencias que instala Vercel (API)
+├── render.yaml            # Blueprint de Render (build, start y variables)
+└── package.json           # Scripts de local (dev) y de despliegue (Render)
 ```
 
 ---
@@ -59,41 +59,87 @@ npm run dev               # http://localhost:5173
 
 ---
 
-## Desplegar en Vercel (frontend + API)
+## Desplegar en Render (frontend + API en un solo servicio)
 
-El repo ya trae `vercel.json` y `api/index.js`: el frontend se compila con
-Vite y `/api/*` se redirige a la misma app Express que corre en local.
+Un **único Web Service** de Express sirve la API (`/api/*`) y el frontend ya
+compilado desde `Backend Prueba/public`, todo en el mismo puerto y dominio
+(sin CORS, sin segundo servicio).
 
 1. Subí el proyecto a GitHub (ya está en este repositorio).
-2. Entrá a [vercel.com/new](https://vercel.com/new) → **Import Git Repository**
-   → elegí este repositorio.
-3. **No toques Root Directory** (dejalo en `/`) ni Build & Output: los valores
-   vienen de `vercel.json`. Framework: *Other / Vite*.
-4. Agregá las **Environment Variables**:
+2. Entrá a [render.com](https://render.com) → **New +** → **Web Service**
+   → conectá este repositorio.
+3. Dejá estos valores (si dejaste vacío Root Directory, Render usa la raíz):
+
+   | Campo | Valor |
+   |---|---|
+   | Root Directory | *(vacío = raíz del repo)* |
+   | Runtime | Node |
+   | Build Command | `npm install && npm run build` |
+   | Start Command | `npm start` |
+
+4. Agregá las **Environment**:
 
    | Variable | Valor | Para qué |
    |---|---|---|
    | `MONGO_URL` | la URI de MongoDB Atlas | conexión a la base |
    | `SECRETORPRIVATEKEY` | misma clave que en `Backend Prueba/.env` | firma de los JWT |
-   | `VITE_API_URL` | `/api` | el frontend llama a la API de su mismo dominio |
+   | `NODE_VERSION` | `22` | Vite 8 exige Node 20.19+ o 22.12+ |
 
-5. **Deploy**. La URL queda tipo `gestion-escolar.vercel.app`.
+5. **Create Web Service**. La URL queda tipo `gestion-escolar.onrender.com`.
+
+> También podés usar el **Blueprint**: el repo trae `render.yaml` con estos
+> mismos valores, y Render lo detecta al importar el repositorio.
+
+### Qué hace cada paso del despliegue
+
+- `npm install` (raíz) deja npm listo; el código real vive en dos carpetas
+  con su propio `package.json`: `Backend Prueba` y `Frontend`.
+- `npm run build` ejecuta `scripts/desplegar-render.js`: instala las
+  dependencias del backend y del frontend, compila el frontend
+  (`Frontend/dist`) y **copia ese build a `Backend Prueba/public`**.
+- `npm start` arranca Express directamente con node
+  (`node "Backend Prueba/app.js"`) en `process.env.PORT` (Render lo define),
+  sirviendo `/api/*` y el frontend desde `public/`.
 
 ### MongoDB Atlas (paso obligatorio)
 
-Vercel ejecuta la API desde sus propias IPs, que cambian. En
+Render ejecuta la API desde sus propias IPs, que cambian. En
 **MongoDB Atlas → Network Access → IP Access List** agregá `0.0.0.0/0`
 (todas las IPs). Sin eso la API no va a poder conectarse a la base.
 
+### Comprobar que salió bien
+
+| URL | Qué debe responder |
+|---|---|
+| `https://<app>.onrender.com/life` | `El servidor esta funcionando` |
+| `https://<app>.onrender.com/` | la pantalla de login |
+| Login `admin@sena.edu.co` / `123456` | entra a Inicio |
+
+> El plan gratuito duerme el servicio tras un rato sin uso: el primer arranque
+> tarda ~1 minuto. No es un error de la app.
+
+### El error 404 del login (ya corregido)
+
+El motivo clásico de este fallo: el build se hacía **sin** `VITE_API_URL`
+porque el `.env` del frontend no viaja al servidor (está en `.gitignore`).
+Sin esa variable axios usaba rutas relativas (`/usuarios/login`) y el backend
+solo conoce `/api/usuarios/login`, así que devolvía 404.
+
+Hoy hay una protección: en `src/services/api.js` el baseURL está escrito a mano
+con su fallback, `import.meta.env.VITE_API_URL || "/api"`. Como `"/api"` no
+depende de ninguna variable de entorno, el build sale correcto aunque no
+exista ningún `.env`, y el backend (que sirve el frontend en el mismo dominio)
+responde en `/api/usuarios/login`.
+
 ### Cómo quedó armado
 
-- `api/index.js` exporta la instancia de Express de `Backend Prueba/server.js`
-  **sin** llamar a `app.listen()`, que Vercel no permite.
-- `vercel.json` redirige `/api/:path*` → `/api/index`; Express recibe el path
-  original (`/api/usuarios/login`), así que no hay que repetir rutas.
-- Los archivos estáticos (incluidas las páginas de error) los sirve el CDN de
-  Vercel desde `Frontend/dist`; `express.static` queda ignorado, como indica
-  la documentación de Vercel para Express.
+- El build del frontend termina en `Backend Prueba/public`, que Express sirve
+  con `express.static` y con el catch-all `app.get("*")` de `server.js`.
+- El frontend usa rutas hash (`/#/cursos`), así que no hace falta ningún
+  fallback extra de rutas en el servidor.
+- `dotenv` en `server.js` y `database.js` carga el `.env` con ruta absoluta
+  (relativa a cada archivo), no desde el directorio de trabajo. En Render no
+  hay `.env`: mandan las variables del dashboard.
 - **Cada push a `main` vuelve a desplegar.**
 
 ---

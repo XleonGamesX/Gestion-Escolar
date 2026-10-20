@@ -8,8 +8,8 @@
     "dev": "npm --prefix Frontend run dev",
     "dev:frontend": "npm --prefix Frontend run dev",
     "dev:backend": "npm --prefix \"Backend Prueba\" run dev",
-    "build": "npm --prefix Frontend run build",
-    "start": "npm --prefix \"Backend Prueba\" run start",
+    "build": "node scripts/desplegar-render.js",
+    "start": "node \"Backend Prueba/app.js\"",
     "seed": "npm --prefix \"Backend Prueba\" run seed"
   },
   "dependencies": {

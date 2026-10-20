@@ -9,7 +9,15 @@ import { useAuthStore } from "../stores/auth.store.js";
  * nunca dentro de los componentes.
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // http://localhost:4500/api
+  // Produccion (Render) y build local: "/api", porque el backend sirve el
+  // frontend desde la MISMA url, y las rutas relativas al dominio evitan el
+  // 404 del login.
+  // El "/api" esta escrito a mano a proposito y NO depende de ninguna variable
+  // de entorno: VITE_API_URL solo se usa en desarrollo (npm run dev), donde el
+  // frontend corre en el 5173 y el backend en el 4500. Si en un build esa
+  // variable no existe, axios igual usa "/api" (el || de la derecha), asi que
+  // el bundle nunca puede salir pidiendo "/usuarios/login" -> 404.
+  baseURL: import.meta.env.VITE_API_URL || "/api",
   headers: { "Content-Type": "application/json" },
 });
 

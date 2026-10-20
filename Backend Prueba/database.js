@@ -6,10 +6,19 @@
  * @returns {Promise<void>}
  */
 import dns from "dns";
+import path from "path";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
+import { fileURLToPath } from "url";
 
-dotenv.config();
+// En modulos ES no existe __dirname; se reconstruye a partir de import.meta.url.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Ruta absoluta al .env del backend: el directorio de trabajo depende de como
+// se arranque el proceso (en Render puede ser la raiz del repo). dotenv no
+// pisa variables ya definidas, asi que MONGO_URL del dashboard de Render (si
+// existe) tiene prioridad sobre este archivo.
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 // Las cadenas "mongodb+srv://" hacen una consulta DNS especial (tipo SRV). En
 // algunas redes el DNS local la rechaza (error "querySrv ECONNREFUSED") y la
