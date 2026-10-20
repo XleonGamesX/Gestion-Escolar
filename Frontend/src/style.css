@@ -1,0 +1,508 @@
+/* =========================================================
+   Estilos globales del proyecto.
+   Todo lo especifico de una vista vive dentro de su .vue;
+   aqui solo va lo que aplica a TODA la aplicacion.
+
+   PALETA: basada en la Plataforma Integra.
+   ========================================================= */
+
+:root {
+  /* Colores de marca (coinciden con quasar-variables.sass) */
+  --color-primario: #1577ad;
+  --color-primario-oscuro: #0f5c85;
+  /* Azul original de Integra: solo para bordes, filetes y acentos,
+     nunca como fondo de texto blanco (da 3.3:1 y no cumple AA) */
+  --color-primario-claro: #2095d6;
+  --color-secundario: #1aa85e;
+  --color-positivo: #158047;
+  --color-acento: #fdcc40;
+  --color-negativo: #cf2f34;
+
+  /* Neutros */
+  --color-texto: #1f2b36;
+  --color-tenue: #5c6b7a;
+  --color-borde: #d8dee4;
+  --color-fondo: #f4f7fa;
+  --color-fondo-cabecera: #eaf2f8;
+  --color-fondo-hover: #f2f8fc;
+
+  /* Formas y sombras: mismos valores que usa Integra */
+  --radio: 10px;
+  --radio-sm: 8px;
+  --sombra-tarjeta: 0 0 15px rgba(0, 0, 0, 0.18);
+  --sombra-suave: 0 2px 8px rgba(31, 43, 54, 0.1);
+
+  /* Tamaño minimo de zona tactil (accesibilidad) */
+  --zona-tactil: 40px;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Noto Sans", Helvetica, Arial, sans-serif;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================================
+   Jerarquia tipografica: titulo > subtitulo > texto
+   ========================================================= */
+.titulo-pantalla {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.subtitulo-pantalla {
+  font-size: 0.9rem;
+  color: var(--color-tenue);
+  margin: 0.25rem 0 0;
+}
+
+/* Titulo de bloque dentro de las tarjetas (listado de...) */
+.titulo-bloque {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-texto);
+}
+
+/* Utilidades de texto */
+.texto-tenue {
+  color: var(--color-tenue);
+}
+
+/* Tarjetas del dashboard: mismo borde y radio en todas */
+.tarjeta-resumen {
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+/* =========================================================
+   BOTONES
+   Radio uniforme de 8px en todo el sistema (el de Quasar es
+   3px y se ve desincronizado con las tarjetas de 10px).
+   Los botones redondos se excluyen para no deformarlos.
+   ========================================================= */
+.q-btn:not(.q-btn--round) {
+  border-radius: var(--radio-sm);
+}
+
+/* Botón principal de LOGIN: 45px de alto, como en Integra.
+   Antes usaba size="lg" y quedaba enorme. */
+.boton-login {
+  height: 45px;
+  min-height: 45px;
+  border-radius: var(--radio);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 0.92rem;
+}
+
+/* Botones del pie de los formularios (Cancelar / Guardar) */
+.boton-formulario {
+  min-height: var(--zona-tactil);
+  padding: 0 18px;
+  font-weight: 500;
+}
+
+/* El "Cancelar" era flat gris sin contraste: ahora lleva borde */
+.boton-formulario--secundario {
+  border: 1px solid var(--color-borde);
+}
+
+/* =========================================================
+   CAMPOS DE TEXTO
+   Outlined con el mismo radio de 10px que usa Integra
+   (Quasar trae 4px). Sin `dense` conservan sus 56px.
+   ========================================================= */
+.q-field--outlined .q-field__control {
+  border-radius: var(--radio);
+  padding: 0 14px;
+}
+
+.q-field--outlined .q-field__control:before {
+  border-color: #c9d3dc;
+}
+
+.q-field--outlined .q-field__control:hover:before {
+  border-color: var(--color-primario);
+}
+
+/* Texto dentro de los formularios: un punto más de peso para leerse */
+.q-field__native,
+.q-field__input {
+  font-weight: 500;
+}
+
+/* =========================================================
+   DIÁLOGOS DE FORMULARIO
+   Cabecera con fondo propio y filete de color: separa de un
+   vistazo "de qué se trata la ventana" del formulario.
+   ========================================================= */
+.formulario-dialogo {
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.cabecera-formulario {
+  background-color: var(--color-fondo-cabecera);
+  border-bottom: 3px solid var(--color-primario-claro);
+}
+
+/* =========================================================
+   TARJETAS ACCIONABLES DEL DASHBOARD
+   Antes el usuario no sabia que tenia que presionar.
+   ========================================================= */
+.tarjeta-accion {
+  position: relative;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.tarjeta-accion:hover,
+.tarjeta-accion:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: var(--sombra-suave);
+  border-color: var(--color-primario);
+}
+
+.tarjeta-accion:active {
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   TABLAS: el encabezado debe distinguirse DEL CONTENIDO.
+   Fondo distinto, mayusculas, peso 700 y filete de color.
+   ========================================================= */
+/* El prefijo `.q-table__container` es necesario para ganarle en
+   especificidad a las reglas de separación de Quasar
+   (.q-table--horizontal-separator > table > thead > tr > th),
+   que si no se impondrían y el filete quedaría de 1px gris. */
+.q-table__container .q-table thead tr th {
+  background-color: var(--color-fondo-cabecera);
+  color: #34455a;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-primario-claro);
+}
+
+.q-table tbody td {
+  font-size: 0.875rem;
+  color: var(--color-texto);
+}
+
+.q-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.q-table tbody tr:nth-child(even) {
+  background-color: #fafcfe;
+}
+
+.q-table tbody tr:hover {
+  background-color: var(--color-fondo-hover);
+}
+
+/* Cabecera del cuadro de herramientas (titulo + buscador + filtro + accion) */
+.barra-tabla {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding-bottom: 12px;
+}
+
+.barra-tabla__titulo {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+/* El buscador nunca debe desbordar en pantallas pequenas */
+.barra-tabla__buscar {
+  flex: 0 1 260px;
+  min-width: 170px;
+  width: auto;
+}
+
+/* =========================================================
+   CONTROL SEGMENTADO (filtros Todos / Activos / Inactivos).
+   Opcion activa en color solido; las demas, fondo claro con
+   texto oscuro. Sin esto las tres opciones quedan igual y no
+   se distingue cual esta seleccionada.
+   ========================================================= */
+.segmentado {
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-sm);
+  overflow: hidden;
+  background: #fff;
+  /* El grupo de Quasar trae sombra propia: aquí no aporta */
+  box-shadow: none;
+}
+
+.segmentado .q-btn {
+  font-size: 0.8rem;
+  font-weight: 500;
+  /* Misma altura que el buscador (dense = 40px) y que el botón
+     principal: alineados en una sola línea */
+  min-height: 40px;
+  padding: 0 14px;
+  background-color: #eef2f6;
+  color: var(--color-tenue);
+  flex: 0 0 auto;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* Separador visual entre las opciones */
+.segmentado .q-btn-item:not(:last-child) {
+  border-right: 1px solid var(--color-borde);
+}
+
+/* Opción elegida: Quasar la pinta de color solido con texto blanco
+   (bg-primary/text-white), aquí solo reforzamos el peso de la letra.
+   Se selecciona por [aria-pressed], porque QBtnToggle NO agrega
+   la clase q-btn--active. */
+.segmentado .q-btn[aria-pressed="true"] {
+  font-weight: 700;
+}
+
+.segmentado .q-btn[aria-pressed="false"]:hover {
+  background-color: #dde6ee;
+  color: var(--color-texto);
+}
+
+/* =========================================================
+   BOTONES DE ACCION POR FILA.
+   Caja visible de 40px con fondo y borde propios: antes eran
+   iconos sueltos sin contexto y casi transparentes al
+   deshabilitarse. El icono conserva el color semantico y la
+   etiqueta va en texto oscuro para cumplir contraste AA.
+   ========================================================= */
+.boton-fila {
+  min-width: var(--zona-tactil);
+  height: var(--zona-tactil);
+  border-radius: var(--radio-sm);
+  margin: 2px;
+  padding: 0 10px;
+  background-color: #ffffff;
+  border: 1px solid var(--color-borde);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.boton-fila:hover {
+  background-color: var(--color-fondo-hover);
+  border-color: var(--color-primario);
+  box-shadow: 0 1px 3px rgba(31, 43, 54, 0.18);
+}
+
+/* La etiqueta en texto oscuro: el color semantico lo lleva el icono */
+.boton-fila__texto {
+  margin-left: 6px;
+  color: var(--color-texto);
+  font-weight: 500;
+}
+
+/* La accion deshabilitada (tu propia cuenta) sigue leyendose.
+   Quasar agrega la clase `disabled` y la opacidad la pone él. */
+.boton-fila.disabled {
+  background-color: #f2f4f6;
+  border-color: #e4e9ee;
+  box-shadow: none;
+}
+
+/* =========================================================
+   BOTON PRINCIPAL DE LA BARRA (Nuevo usuario / curso / aprendiz)
+   ========================================================= */
+.boton-principal-tabla {
+  min-height: var(--zona-tactil);
+  border-radius: var(--radio-sm);
+  font-weight: 500;
+  box-shadow: var(--sombra-suave);
+  flex: 0 0 auto;
+}
+
+/* =========================================================
+   MENU LATERAL
+   El item activo lleva barra de acento ademas de fondo: antes
+   solo cambiaba el color y no se aclaraba donde estaba el foco.
+   ========================================================= */
+.menu-lateral {
+  background: #ffffff;
+}
+
+.item-menu {
+  min-height: var(--zona-tactil);
+  margin: 3px 8px;
+  border-radius: var(--radio-sm);
+  color: var(--color-texto);
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.item-menu:hover:not(.item-menu--activo) {
+  background-color: var(--color-fondo-hover);
+}
+
+.item-menu--activo,
+.item-menu--activo:hover {
+  background-color: var(--color-primario);
+  color: #fff;
+  font-weight: 700;
+  /* Barra de acento: indica de un vistazo en qué sección estás */
+  box-shadow: inset 4px 0 0 var(--color-acento);
+}
+
+/* =========================================================
+   ACCESIBILIDAD: foco visible en todo lo que se puede pulsar
+   ========================================================= */
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible,
+.q-focusable:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   SweetAlert2: todo son avisos COMPACTOS (toast) pegados
+   abajo a la derecha, con UN SOLO COLOR DE FONDO plano:
+   azul (confirmación/aviso) · verde (éxito) · rojo (error).
+   No se abre ningún cuadro grande en el centro de la
+   pantalla: el aviso no tapa la tabla ni bloquea los clics.
+   ========================================================= */
+
+/* --- Base compartida: tipografía y formas del tema ------- */
+.swal2-popup {
+  font-family: "Roboto", sans-serif !important;
+  border-radius: var(--radio) !important;
+  font-size: 1.02rem !important;
+}
+
+.swal2-title {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+}
+
+.swal2-confirm,
+.swal2-cancel {
+  border-radius: var(--radio-sm) !important;
+  font-weight: 600 !important;
+  min-height: 40px;
+  padding: 0 20px;
+}
+
+/* El cancelar debe verse: borde claro y fondo transparente */
+.swal2-cancel {
+  background-color: transparent !important;
+  color: var(--color-texto) !important;
+  border: 1px solid var(--color-borde) !important;
+}
+
+.swal2-cancel:hover {
+  background-color: #eef1f4 !important;
+}
+
+/* --- El aviso va por encima de menús y cajones de Quasar */
+body.swal2-toast-shown .swal2-container {
+  z-index: 7000;
+}
+
+/* --- Tamaño reducido y caja acotada -------------------- */
+.swal2-popup.swal2-toast {
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.25);
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+  margin: 0.35em 0 0;
+  padding: 0 0.5em;
+  font-size: 1rem !important;
+}
+
+.swal2-popup.swal2-toast .swal2-html-container {
+  margin: 0.3em 0.5em 0;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+/* --- Icono: aro y glifo en blanco sobre el color de fondo */
+.swal2-popup.swal2-toast .swal2-icon {
+  border-color: rgba(255, 255, 255, 0.95) !important;
+  color: #fff !important;
+}
+
+.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content {
+  color: #fff !important;
+}
+
+.swal2-popup.swal2-toast .swal2-error [class^="swal2-x-mark-line"] {
+  background-color: #fff !important;
+}
+
+.swal2-popup.swal2-toast .swal2-success [class^="swal2-success-line"] {
+  background-color: #fff !important;
+}
+
+.swal2-popup.swal2-toast .swal2-success .swal2-success-ring {
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* --- Botones del aviso de confirmación: más chicos ------ */
+.swal2-popup.swal2-toast .swal2-confirm,
+.swal2-popup.swal2-toast .swal2-cancel {
+  min-height: 34px;
+  padding: 0 14px;
+  font-size: 0.875rem;
+}
+
+/* Fondo azul: primario en blanco y cancelar con filete blanco */
+.alerta-toast--confirmar .swal2-confirm {
+  color: #1577ad !important;
+}
+
+.alerta-toast--confirmar .swal2-cancel {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.alerta-toast--confirmar .swal2-cancel:hover {
+  background-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* --- Barra de cierre automático y botón ✕ en blanco ----- */
+.swal2-popup.swal2-toast .swal2-timer-progress-bar {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.swal2-popup.swal2-toast .swal2-close {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.swal2-popup.swal2-toast .swal2-close:hover {
+  color: #fff !important;
+}

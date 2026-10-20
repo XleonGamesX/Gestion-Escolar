@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+
+# Respaldo del repositorio que tenia la carpeta del backend (historial en
+# https://github.com/jagues6/pruebawebservice). Borrar cuando ya no haga falta.
+.git-backend-backup/
+
+# Variables de entorno: NUNCA se suben al repo.
+# Cada carpeta tiene su .env.example con la estructura a copiar.
+.env
+.env.*
+!.env.example
+
+# Artefactos de compilación
+dist/
+Backend Prueba/public/
+.vercel/
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
